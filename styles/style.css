@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+    display: grid;
+    height: 100vh;
+
+    grid-template-rows: 90px 1fr 70px;
+
+    font-family: sans-serif;
+    color: #1c2e54;
+    margin: 0 2rem;
+}
+
+a {
+    text-decoration: none;
+    color: #1c2e54;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+header {
+    display: grid;
+    grid-template-columns: 150px 1fr 215px;
+
+    /* padding-top: 1.3rem; */
+    place-items: center start;
+}
+
+main {
+    display: grid;
+
+    grid-template-rows: 60px 1fr;
+}
+
+footer {
+    background-color: #eeeeee;
+    margin: 0 -2rem;
+    padding: 0 2rem;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+ul {
+    display: grid;
+
+    grid-template-columns: repeat(3, 70px);
+
+    list-style: none;
+}
+
+.list-secction {
+    display: grid;
+
+    grid-template-columns: repeat(auto-fill, minmax(269px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.image-list-secction {
+    max-width: 100%;
+
+}
+
+.item-list-secction {
+    display: grid;
+
+    grid-auto-flow: row;
+    gap: 1.2rem;
+}
+
+h1 {
+    font-family: 'Bebas Neue', cursive;
+    font-size: 35px;
+}
+
+.tile-footer {
+    /* justify-content: start; */
+
+    place-self: center start;
+}
+
+.country-footer {
+    /* justify-content: end; */
+    place-self: center end;
+}
