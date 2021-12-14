@@ -26,7 +26,7 @@ a {
 
 header {
     display: grid;
-    grid-template-columns: 150px 1fr 215px;
+    grid-template-columns: 150px 1fr 200px;
 
     /* padding-top: 1.3rem; */
     place-items: center start;
@@ -73,6 +73,7 @@ ul {
 
     grid-auto-flow: row;
     gap: 1.2rem;
+    position: relative;
 }
 
 h1 {
@@ -81,12 +82,78 @@ h1 {
 }
 
 .tile-footer {
-    /* justify-content: start; */
-
     place-self: center start;
 }
 
 .country-footer {
-    /* justify-content: end; */
     place-self: center end;
+}
+
+.one-item-main{
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    padding: 2rem 0;
+}
+
+.one-item-image {
+    max-width: 100%;
+    height: 470px;
+    justify-self: end;
+    padding-right: 2rem;
+}
+
+.name-list-secction {
+    font-size: xx-large;
+    font-weight: 700;
+    padding-bottom: 1.5rem;
+}
+
+.one-item-button{
+    padding: 1rem;
+    background: linear-gradient(0.35turn, #497da7, #573ba7);
+    color: #ffffff;
+    border: none;
+    border-radius: 50px;
+    font-weight: 700;
+}
+
+.one-item-button:hover {
+    background: linear-gradient(0turn, #3f13a7, #137da7);
+
+}
+
+
+.new-item{
+    background-color: royalblue;
+    color: #ffffff;
+
+    position: absolute;
+    top: -1.5rem;
+    right: 0;
+    padding: 0.2rem;
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.shopping-list {
+    position: relative;
+}
+
+.item-in-shopping-list {
+    background-color: red;
+    color: #ffffff;
+    font-size: x-small;
+    padding: 0.2rem;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+header button {
+    background-color: #ffffff;
+    border: none;
 }
