@@ -6,11 +6,17 @@ const state = {
     search: null,
     user: null,
     selectedItem: null,
-    bag: []
+    bag: [],
+    email: null,
+    password: null
 }
 
 function fetchStore() {
     return fetch("http://localhost:3000/store").then(resp => resp.json())
+}
+
+function fetchUsers() {
+    return fetch('http://localhost:3000/users').then(resp => resp.json())
 }
 
 function watchNumberOfItem() {
@@ -21,6 +27,7 @@ function removeItemFromBag() {
 
 }
 
+// Render Functions
 function renderHeader() {
     const headerEl = document.createElement('header')
 
@@ -60,7 +67,6 @@ function renderHeader() {
     const searchImgEl = document.createElement('img')
     searchImgEl.setAttribute('src', 'icons/search_black_24dp.svg')
     searchButtonEl.addEventListener('click', function () {
-        // renderSearchModal()
         state.modal = "search"
         render()
     })
@@ -72,7 +78,11 @@ function renderHeader() {
     const personButtonEl = document.createElement('button')
     const personImgEl = document.createElement('img')
     personImgEl.setAttribute('src', 'icons/person_black_24dp.svg')
-
+    personLiEl.addEventListener('click', function () {
+        state.modal = "profile"
+        render()
+    })
+    
     personButtonEl.append(personImgEl)
     personLiEl.append(personButtonEl)
 
@@ -280,9 +290,86 @@ function renderSearchModal() {
     document.body.append(modalWrapperEl)
 }
 
+function renderProfileModal() {
+    const modalWrapperEl = document.createElement('div')
+    modalWrapperEl.setAttribute('class', 'modal-wrapper')
+    modalWrapperEl.addEventListener('click', function () {
+        state.modal = ''
+        render()
+    })
+
+    const modalEl = document.createElement('div')
+    modalEl.setAttribute('class', 'modal')
+    modalEl.addEventListener('click', function (event) {
+        event.stopPropagation()
+    })
+
+    const closeModalBtn = document.createElement('button')
+    closeModalBtn.setAttribute('class', 'modal__close-btn')
+    closeModalBtn.textContent = 'X'
+    closeModalBtn.addEventListener('click', function () {
+        state.modal = ''
+        render()
+    })
+
+    const titleEl = document.createElement('h2')
+    titleEl.setAttribute('class', 'search-title')
+    titleEl.textContent = 'Sign in'
+
+// <form action="">
+//     <label for="user-email">Email</label>
+//     <input type="email" id="user-email">
+
+//     <label for="user-password">Password</label>
+//     <input type="password" id="user-password">
+// </form>
+
+    const profileFormEl = document.createElement('form')
+    profileFormEl.setAttribute('class', 'profile-form')
+    profileFormEl.addEventListener('submit', function (event) {
+        event.preventDefault()
+        state.email = emailInputEl.value
+        state.password = passwordInputEl.value
+        state.modal = ''
+        render()
+        getUsers()
+    })
+
+    const emailLabelEl = document.createElement('label')
+    emailLabelEl.setAttribute('for', 'user-email')
+    emailLabelEl.textContent = 'Email'
+
+    const emailInputEl = document.createElement('input')
+    emailInputEl.setAttribute('type', 'email')
+    emailInputEl.setAttribute('id', 'user-email')
+
+
+    const passwordLabelEl = document.createElement('label')
+    passwordLabelEl.setAttribute('for', 'user-password')
+    passwordLabelEl.textContent = 'Password'
+
+    const passwordInputEl = document.createElement('input')
+    passwordInputEl.setAttribute('type', 'password')
+    passwordInputEl.setAttribute('id', 'user-password')
+
+    const buttonEl = document.createElement('button')
+    buttonEl.setAttribute('class', 'signin-button')
+    buttonEl.setAttribute('type', 'submit')
+    buttonEl.textContent = 'Sign In'
+
+    profileFormEl.append(emailLabelEl, emailInputEl, passwordLabelEl, passwordInputEl, buttonEl)
+
+    modalEl.append(closeModalBtn, titleEl, profileFormEl)
+    modalWrapperEl.append(modalEl)
+
+    document.body.append(modalWrapperEl)
+}
+
 function renderModal() {
     if (state.modal === 'search') {
         renderSearchModal()
+    } else if (state.modal === 'profile') {
+        renderProfileModal()
     }
 }
 
@@ -298,6 +385,18 @@ function render() {
     }
     renderFooter()
     renderModal()
+}
+
+function getUsers() {
+    fetchUsers().then(function (users) {
+        for (user of users){
+            if(user.id === state.email && user.password === state.password) {
+                console.log("Nicolas is signed in")
+                console.log(user.bag)
+                state.bag = user.bag
+            }
+        }
+    })
 }
 
 function addItemToStore() {
