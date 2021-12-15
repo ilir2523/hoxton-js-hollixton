@@ -3,10 +3,10 @@ const state = {
     itemType: ['Girls', 'Guys', 'Sale'],
     tab: null,
     modal: '',
-    search: '',
+    search: null,
     user: null,
     selectedItem: null,
-    bag:[]
+    bag: []
 }
 
 function fetchStore() {
@@ -18,15 +18,15 @@ function watchNumberOfItem() {
 }
 
 function removeItemFromBag() {
-    
+
 }
 
 function renderHeader() {
-    const headerEl =  document.createElement('header')
+    const headerEl = document.createElement('header')
 
     const h1El = document.createElement('h1')
     h1El.textContent = 'Hollixton'
-    h1El.addEventListener('click', function() {
+    h1El.addEventListener('click', function () {
         state.selectedItem = null
         state.tab = 'Home'
         watchTabAndAddItemToStore()
@@ -39,9 +39,10 @@ function renderHeader() {
         const typeLiEl = document.createElement('li')
 
         const typeLinkEl = document.createElement('a')
+        typeLinkEl.setAttribute('href', `#`)
         typeLinkEl.textContent = type
         let selectedType = type
-        typeLinkEl.addEventListener('click', function() {
+        typeLinkEl.addEventListener('click', function () {
             state.selectedItem = null
             state.tab = selectedType
             console.log(selectedType)
@@ -58,6 +59,11 @@ function renderHeader() {
     const searchButtonEl = document.createElement('button')
     const searchImgEl = document.createElement('img')
     searchImgEl.setAttribute('src', 'icons/search_black_24dp.svg')
+    searchButtonEl.addEventListener('click', function () {
+        // renderSearchModal()
+        state.modal = "search"
+        render()
+    })
 
     searchButtonEl.append(searchImgEl)
     searchLiEl.append(searchButtonEl)
@@ -100,15 +106,33 @@ function renderMain() {
     const mainUlEl = document.createElement('ul')
     mainUlEl.setAttribute('class', 'list-secction')
 
+    let itemsToDisplay = state.store
+    if (state.search !== null) {
+        itemsToDisplay = filterItemFromStore()
 
-    for (const item of state.store) {
+        const searchH2El = document.createElement('h2')
+        searchH2El.setAttribute('class', 'search-h2-el')
+        searchH2El.textContent = `Current search: ${state.search}`
+
+        const closeSearchEl = document.createElement('button')
+        closeSearchEl.setAttribute('class', 'search-close-btn')
+        closeSearchEl.textContent = 'X'
+        closeSearchEl.addEventListener('click', function () {
+            state.search = null
+            render()
+        })
+
+        searchH2El.append(closeSearchEl)
+        mainEl.append(searchH2El)
+    }
+
+    for (const item of itemsToDisplay) {
 
         const itemLiEl = document.createElement('li')
         itemLiEl.setAttribute('class', 'item-list-secction')
 
-        itemLiEl.addEventListener('click', function(){
+        itemLiEl.addEventListener('click', function () {
             state.selectedItem = item.id
-            // console.log(item.id)
             render()
         })
 
@@ -168,8 +192,8 @@ function renderFooter() {
 function renderOneItem(items) {
     // console.log(items)
     let item = null
-    for (const myitem of items){
-        if (myitem.id === state.selectedItem){
+    for (const myitem of items) {
+        if (myitem.id === state.selectedItem) {
             item = myitem
         }
     }
@@ -177,74 +201,159 @@ function renderOneItem(items) {
     mainEl.setAttribute('class', 'one-item-main')
 
     const itemImageEl = document.createElement('img')
-        itemImageEl.setAttribute('class', 'one-item-image')
-        itemImageEl.setAttribute('src', item.image)
-        itemImageEl.setAttribute('alt', 'one item image')
+    itemImageEl.setAttribute('class', 'one-item-image')
+    itemImageEl.setAttribute('src', item.image)
+    itemImageEl.setAttribute('alt', 'one item image')
 
     const oneItemSeccionEl = document.createElement('secction')
     oneItemSeccionEl.setAttribute('class', 'one-item-secction')
 
     const itemNameEl = document.createElement('h3')
-    itemNameEl.setAttribute('class', 'name-list-secction')
+    itemNameEl.setAttribute('class', 'one-name-list-secction')
     itemNameEl.textContent = item.name.toUpperCase()
 
     const buttonEl = document.createElement('button')
     buttonEl.setAttribute('class', 'one-item-button')
     buttonEl.textContent = 'ADD TO BAG'
 
-    buttonEl.addEventListener('click', function() {
+    buttonEl.addEventListener('click', function () {
         state.bag.push(item.name)
         render()
     })
 
     oneItemSeccionEl.append(itemNameEl, buttonEl)
-    
+
     mainEl.append(itemImageEl, oneItemSeccionEl)
 
     document.body.append(mainEl)
 
 }
 
+function renderSearchModal() {
+    const modalWrapperEl = document.createElement('div')
+    modalWrapperEl.setAttribute('class', 'modal-wrapper')
+    modalWrapperEl.addEventListener('click', function () {
+        state.modal = ''
+        render()
+    })
+
+    const modalEl = document.createElement('div')
+    modalEl.setAttribute('class', 'modal')
+    modalEl.addEventListener('click', function (event) {
+        event.stopPropagation()
+    })
+
+    const closeModalBtn = document.createElement('button')
+    closeModalBtn.setAttribute('class', 'modal__close-btn')
+    closeModalBtn.textContent = 'X'
+    closeModalBtn.addEventListener('click', function () {
+        state.modal = ''
+        render()
+    })
+
+    const titleEl = document.createElement('h2')
+    titleEl.setAttribute('class', 'search-title')
+    titleEl.textContent = 'Search for yor favorite items!'
+
+    const formEl = document.createElement('form')
+    // formEl.setAttribute()
+    formEl.addEventListener('submit', function (event) {
+        event.preventDefault()
+        state.search = searchInputEl.value
+        state.modal = ''
+        // state.tab = 'You are searching for: ' + searchInputEl.value
+        state.selectedItem = null
+        // watchTabAndAddItemToStore()
+        render()
+    })
+
+    const searchInputEl = document.createElement('input')
+    searchInputEl.setAttribute('class', 'search-input')
+    searchInputEl.setAttribute('placeholder', 'Search...')
+    searchInputEl.setAttribute('type', 'search')
+
+
+    formEl.append(searchInputEl)
+    modalEl.append(closeModalBtn, titleEl, formEl)
+    modalWrapperEl.append(modalEl)
+
+    document.body.append(modalWrapperEl)
+}
+
+function renderModal() {
+    if (state.modal === 'search') {
+        renderSearchModal()
+    }
+}
+
+
 function render() {
     document.body.innerHTML = ''
 
     renderHeader()
-    if (state.selectedItem === null){
+    if (state.selectedItem === null) {
         renderMain()
     } else {
         renderOneItem(state.store)
     }
-    
     renderFooter()
+    renderModal()
 }
 
 function addItemToStore() {
-    fetchStore().then(function(items) {
+    fetchStore().then(function (items) {
         state.store = items
         render()
     })
 }
 
 function addGirlsItemToStore() {
-    fetchStore().then(function(items) {
+    fetchStore().then(function (items) {
         state.store = items.filter(item => item.type === "Girls")
         render()
     })
 }
 
 function addGuysItemToStore() {
-    fetchStore().then(function(items) {
+    fetchStore().then(function (items) {
         state.store = items.filter(item => item.type === "Guys")
         render()
     })
 }
+
+function addSaleItemToStore() {
+    fetchStore().then(function (items) {
+        state.store = items.filter(item => item.discountedPrice)
+        render()
+    })
+}
+
+// function addItemsFromSearchToStore(){
+//     fetchStore().then(function (items) {
+//         state.store = items.filter(item =>
+//             item.name.toLowerCase().includes(state.search.toLowerCase()))
+//         render()
+//     })
+// }
+function filterItemFromStore() {
+    let itemsToDisplay = state.store.filter(item =>
+        item.name.toLowerCase().includes(state.search.toLowerCase())
+    )
+
+    return itemsToDisplay
+}
+
 
 function watchTabAndAddItemToStore() {
     if (state.tab === "Girls") {
         addGirlsItemToStore()
     } else if (state.tab === "Guys") {
         addGuysItemToStore()
-    } else if (state.tab === null || "Sale" ||"Home") {
+    } else if (state.tab === "Sale") {
+        addSaleItemToStore()
+    } /*else if (state.search !== null) {
+        addItemsFromSearchToStore()
+    } */else if (state.tab === null || "Home") {
         addItemToStore()
     }
 }

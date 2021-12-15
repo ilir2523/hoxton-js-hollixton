@@ -76,6 +76,14 @@ ul {
     position: relative;
 }
 
+.name-list-secction{
+    font-weight: 700;
+}
+.price-list-secction {
+    font-size: 21px;
+    font-weight: 700;
+}
+
 h1 {
     font-family: 'Bebas Neue', cursive;
     font-size: 35px;
@@ -104,7 +112,7 @@ h1 {
     padding-right: 2rem;
 }
 
-.name-list-secction {
+.one-name-list-secction {
     font-size: xx-large;
     font-weight: 700;
     padding-bottom: 1.5rem;
@@ -156,4 +164,47 @@ h1 {
 header button {
     background-color: #ffffff;
     border: none;
+}
+
+/* modal */
+.modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+  
+    background-color: #00000030;
+  
+    backdrop-filter: blur(2px);
+
+    display: grid;
+    place-items: center;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 0.5rem;
+    padding: 2rem 3rem;
+  
+    position: relative;
+  }
+  
+  .modal__close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+  
+    background: none;
+    border: none;
+    padding: 0.7rem;
+  }
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.7rem;
+    border: solid 1px rgb(0, 119, 255);
+    border-radius: 3rem;
+    outline: none;
 }
