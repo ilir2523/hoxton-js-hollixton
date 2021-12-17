@@ -215,3 +215,8 @@ header button {
     grid-auto-flow: row;
     gap: 0.3rem;
 }
+
+.signup-link {
+    display: grid;
+    place-items: center;
+}
