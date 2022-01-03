@@ -82,7 +82,7 @@ function renderHeader() {
         state.modal = "profile"
         render()
     })
-    
+
     personButtonEl.append(personImgEl)
     personLiEl.append(personButtonEl)
 
@@ -236,7 +236,6 @@ function renderOneItem(items) {
     mainEl.append(itemImageEl, oneItemSeccionEl)
 
     document.body.append(mainEl)
-
 }
 
 function renderSearchModal() {
@@ -312,63 +311,84 @@ function renderProfileModal() {
         render()
     })
 
-    const titleEl = document.createElement('h2')
-    titleEl.setAttribute('class', 'search-title')
-    titleEl.textContent = 'Sign in'
+    function renderSingInForm() {
+        const titleEl = document.createElement('h2')
+        titleEl.setAttribute('class', 'search-title')
+        titleEl.textContent = 'Sign in'
 
-// <form action="">
-//     <label for="user-email">Email</label>
-//     <input type="email" id="user-email">
+        const profileFormEl = document.createElement('form')
+        profileFormEl.setAttribute('class', 'profile-form')
+        profileFormEl.addEventListener('submit', function (event) {
+            event.preventDefault()
+            state.email = emailInputEl.value
+            state.password = passwordInputEl.value
+            state.modal = ''
+            render()
+            getUsers()
+        })
 
-//     <label for="user-password">Password</label>
-//     <input type="password" id="user-password">
-// </form>
+        const emailLabelEl = document.createElement('label')
+        emailLabelEl.setAttribute('for', 'user-email')
+        emailLabelEl.textContent = 'Email'
 
-    const profileFormEl = document.createElement('form')
-    profileFormEl.setAttribute('class', 'profile-form')
-    profileFormEl.addEventListener('submit', function (event) {
-        event.preventDefault()
-        state.email = emailInputEl.value
-        state.password = passwordInputEl.value
-        state.modal = ''
-        render()
-        getUsers()
-    })
-
-    const emailLabelEl = document.createElement('label')
-    emailLabelEl.setAttribute('for', 'user-email')
-    emailLabelEl.textContent = 'Email'
-
-    const emailInputEl = document.createElement('input')
-    emailInputEl.setAttribute('type', 'email')
-    emailInputEl.setAttribute('id', 'user-email')
+        const emailInputEl = document.createElement('input')
+        emailInputEl.setAttribute('type', 'email')
+        emailInputEl.setAttribute('id', 'user-email')
 
 
-    const passwordLabelEl = document.createElement('label')
-    passwordLabelEl.setAttribute('for', 'user-password')
-    passwordLabelEl.textContent = 'Password'
+        const passwordLabelEl = document.createElement('label')
+        passwordLabelEl.setAttribute('for', 'user-password')
+        passwordLabelEl.textContent = 'Password'
 
-    const passwordInputEl = document.createElement('input')
-    passwordInputEl.setAttribute('type', 'password')
-    passwordInputEl.setAttribute('id', 'user-password')
+        const passwordInputEl = document.createElement('input')
+        passwordInputEl.setAttribute('type', 'password')
+        passwordInputEl.setAttribute('id', 'user-password')
 
-    const buttonEl = document.createElement('button')
-    buttonEl.setAttribute('class', 'signin-button')
-    buttonEl.setAttribute('type', 'submit')
-    buttonEl.textContent = 'Sign In'
+        const buttonEl = document.createElement('button')
+        buttonEl.setAttribute('class', 'signin-button')
+        buttonEl.setAttribute('type', 'submit')
+        buttonEl.textContent = 'Sign In'
 
-    const signUpEl = document.createElement('a')
-    signUpEl.setAttribute('class', 'signup-link')
-    signUpEl.setAttribute('href', '#')
-    signUpEl.textContent = 'Sign Up'
-    signUpEl.addEventListener('click', function() {
-        state.modal = 'Sign Up'
-        render()
-    })
+        const signUpEl = document.createElement('a')
+        signUpEl.setAttribute('class', 'signup-link')
+        signUpEl.setAttribute('href', '#')
+        signUpEl.textContent = 'Sign Up'
+        signUpEl.addEventListener('click', function () {
+            state.modal = 'Sign Up'
+            render()
+        })
 
-    profileFormEl.append(emailLabelEl, emailInputEl, passwordLabelEl, passwordInputEl, buttonEl)
+        profileFormEl.append(emailLabelEl, emailInputEl, passwordLabelEl, passwordInputEl, buttonEl)
 
-    modalEl.append(closeModalBtn, titleEl, profileFormEl, signUpEl)
+        modalEl.append(titleEl, profileFormEl, signUpEl)
+    }
+
+    function renderGreetUser() {
+        const titleEl = document.createElement('h2')
+        titleEl.setAttribute('class', 'search-title')
+        titleEl.textContent = 'Hey ' + state.user
+
+        const logOutEl = document.createElement('button')
+        logOutEl.setAttribute('class', 'signin-button')
+        logOutEl.textContent = 'Log Out'
+        logOutEl.addEventListener('click', function () {
+            state.modal = ''
+            state.user = null
+            state.bag = []
+            render()
+        })
+
+        modalEl.append(titleEl, logOutEl)
+    }
+
+    if (state.user === null) {
+        renderSingInForm()
+    } else if (state.user !== null) {
+        renderGreetUser()
+    }
+
+    modalEl.append(closeModalBtn)
+
     modalWrapperEl.append(modalEl)
 
     document.body.append(modalWrapperEl)
@@ -415,7 +435,7 @@ function renderSignUpModal() {
     const firstNameLabelEl = document.createElement('label')
     firstNameLabelEl.setAttribute('for', 'user-firstName')
     firstNameLabelEl.textContent = 'First name'
-    
+
 
     const firstNameInputEl = document.createElement('input')
     firstNameInputEl.setAttribute('type', 'text')
@@ -455,12 +475,12 @@ function renderSignUpModal() {
     signUpEl.setAttribute('class', 'signup-link')
     signUpEl.setAttribute('href', '#')
     signUpEl.textContent = 'Sign In'
-    signUpEl.addEventListener('click', function() {
+    signUpEl.addEventListener('click', function () {
         state.modal = 'profile'
         render()
     })
-    
-    profileFormEl.append(firstNameLabelEl, firstNameInputEl,lastNameLabelEl, lastNameInputEl, emailLabelEl, emailInputEl, passwordLabelEl, passwordInputEl, buttonEl)
+
+    profileFormEl.append(firstNameLabelEl, firstNameInputEl, lastNameLabelEl, lastNameInputEl, emailLabelEl, emailInputEl, passwordLabelEl, passwordInputEl, buttonEl)
 
     modalEl.append(closeModalBtn, titleEl, profileFormEl, signUpEl)
     modalWrapperEl.append(modalEl)
@@ -494,30 +514,30 @@ function render() {
 
 function getUsers() {
     fetch(`http://localhost:3000/users/${state.email}`).then(resp => resp.json())
-    .then(function (user) {
-        if(user.id === state.email && user.password === state.password) {
-            console.log("Nicolas is signed in")
+        .then(function (user) {
+            if (user.id === state.email && user.password === state.password) {
+                console.log("Nicolas is signed in")
                 console.log(user.bag)
                 state.bag = user.bag
                 state.user = user.firstName
                 console.log(user.firstName)
                 render()
             }
-    })
-    }
+        })
+}
 
 
-    //     for (user of users){
-    //         if(user.id === state.email && user.password === state.password) {
-        //         console.log("Nicolas is signed in")
-        //         console.log(user.bag)
-        //         state.bag = user.bag
-        //         state.user = user.firstName
-        //         console.log(user.firstName)
-        //         render()
-        //     }
-        // }
-    // })
+//     for (user of users){
+//         if(user.id === state.email && user.password === state.password) {
+//         console.log("Nicolas is signed in")
+//         console.log(user.bag)
+//         state.bag = user.bag
+//         state.user = user.firstName
+//         console.log(user.firstName)
+//         render()
+//     }
+// }
+// })
 
 
 function addItemToStore() {
